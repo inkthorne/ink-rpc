@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use serde_json::Error as JsonError;
 use serde_json::Value as JsonValue;
 use std::fmt;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -36,7 +37,7 @@ impl RpcRequest {
         Self {
             jsonrpc: "2.0".to_string(),
             method: String::new(),
-            params: JsonValue::default(),
+            params: JsonValue::Null,
             id: NEXT_ID.fetch_add(1, Ordering::SeqCst),
         }
     }
@@ -73,7 +74,7 @@ impl RpcRequest {
     /// # Returns
     ///
     /// * `Ok(RpcRequest)` - Successfully deserialized request
-    /// * `Err(serde_json::Error)` - Deserialization failed
+    /// * `Err(JsonError)` - Deserialization failed
     ///    /// # Examples
     ///
     /// ```
@@ -86,7 +87,7 @@ impl RpcRequest {
     /// });
     /// let request = RpcRequest::from_json(json).unwrap();
     /// ```
-    pub fn from_json(json: JsonValue) -> Result<Self, serde_json::Error> {
+    pub fn from_json(json: JsonValue) -> Result<Self, JsonError> {
         serde_json::from_value(json)
     }
 
@@ -211,6 +212,28 @@ impl RpcRequest {
 }
 
 impl fmt::Display for RpcRequest {
+    /// Formats the RPC request as a pretty-printed JSON string.
+    ///
+    /// This implementation of the `Display` trait converts the RPC request
+    /// to its JSON representation using `to_json()` and then formats it
+    /// as a pretty-printed JSON string for human-readable output.
+    ///
+    /// # Arguments
+    ///
+    /// * `f` - The formatter to write the output to
+    ///
+    /// # Returns
+    ///
+    /// A `fmt::Result` indicating success or failure of the formatting operation.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ink_rpc::request::RpcRequest;
+    /// let mut request = RpcRequest::new();
+    /// request.set_method("get_balance".to_string());
+    /// println!("{}", request); // Prints pretty-formatted JSON
+    /// ```
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let json = self.to_json();
         let json_string = serde_json::to_string_pretty(&json).unwrap_or("{}".to_string());
