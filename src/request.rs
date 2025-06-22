@@ -6,6 +6,23 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 static NEXT_ID: AtomicU64 = AtomicU64::new(1);
 
+/// Checks if a JSON value is null.
+///
+/// This helper function is used by serde to conditionally skip serialization
+/// of the `params` field when it contains a null value. This helps keep
+/// the JSON output clean by omitting null parameters.
+///
+/// # Arguments
+///
+/// * `v` - A reference to the JSON value to check
+///
+/// # Returns
+///
+/// `true` if the value is JSON null, `false` otherwise.
+fn is_null(v: &JsonValue) -> bool {
+    v.is_null()
+}
+
 // ===========================================================================
 // STRUCT: RpcRequest
 // ===
@@ -14,7 +31,10 @@ static NEXT_ID: AtomicU64 = AtomicU64::new(1);
 pub struct RpcRequest {
     jsonrpc: String,
     method: String,
+
+    #[serde(skip_serializing_if = "is_null")]
     params: JsonValue,
+
     id: u64,
 }
 
