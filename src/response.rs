@@ -198,10 +198,10 @@ impl RpcResponse {
     }
 }
 
-impl fmt::Display for RpcResponse {
+impl fmt::Debug for RpcResponse {
     /// Formats the RPC response as a pretty-printed JSON string.
     ///
-    /// This implementation of the `Display` trait converts the internal JSON value
+    /// This implementation of the `Debug` trait converts the internal JSON value
     /// to a human-readable, indented JSON string. If serialization fails, it falls
     /// back to displaying "Null".
     ///
@@ -225,6 +225,36 @@ impl fmt::Display for RpcResponse {
     /// ```
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let json_string = serde_json::to_string_pretty(&self.value).unwrap_or("Null".to_string());
+        write!(f, "{}", &json_string)
+    }
+}
+
+impl fmt::Display for RpcResponse {
+    /// Formats the RPC response as a JSON string.
+    ///
+    /// This implementation of the `Display` trait converts the internal JSON value
+    /// to JSON string. If serialization fails, it falls back to displaying "Null".
+    ///
+    /// # Arguments
+    ///
+    /// * `f` - The formatter to write the output to
+    ///
+    /// # Returns
+    ///
+    /// A `fmt::Result` indicating success or failure of the formatting operation
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ink_rpc::RpcResponse;
+    /// use serde_json::json;
+    ///
+    /// let mut response = RpcResponse::new(1);
+    /// response.set_result(json!({"status": "ok"}));
+    /// println!("{}", response); // Prints the JSON
+    /// ```
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let json_string = serde_json::to_string(&self.value).unwrap_or("Null".to_string());
         write!(f, "{}", &json_string)
     }
 }

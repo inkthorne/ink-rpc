@@ -231,10 +231,10 @@ impl RpcRequest {
     }
 }
 
-impl fmt::Display for RpcRequest {
+impl fmt::Debug for RpcRequest {
     /// Formats the RPC request as a pretty-printed JSON string.
     ///
-    /// This implementation of the `Display` trait converts the RPC request
+    /// This implementation of the `Debug` trait converts the RPC request
     /// to its JSON representation using `to_json()` and then formats it
     /// as a pretty-printed JSON string for human-readable output.
     ///
@@ -257,6 +257,37 @@ impl fmt::Display for RpcRequest {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let json = self.to_json();
         let json_string = serde_json::to_string_pretty(&json).unwrap_or("{}".to_string());
+
+        write!(f, "{}", &json_string)
+    }
+}
+
+impl fmt::Display for RpcRequest {
+    /// Formats the RPC request as a printed JSON string.
+    ///
+    /// This implementation of the `Display` trait converts the RPC request
+    /// to its JSON representation using `to_json()` and then formats it
+    /// as a JSON string.
+    ///
+    /// # Arguments
+    ///
+    /// * `f` - The formatter to write the output to
+    ///
+    /// # Returns
+    ///
+    /// A `fmt::Result` indicating success or failure of the formatting operation.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ink_rpc::request::RpcRequest;
+    /// let mut request = RpcRequest::new();
+    /// request.set_method("get_balance".to_string());
+    /// println!("{}", request); // Prints the JSON
+    /// ```
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let json = self.to_json();
+        let json_string = serde_json::to_string(&json).unwrap_or("{}".to_string());
 
         write!(f, "{}", &json_string)
     }

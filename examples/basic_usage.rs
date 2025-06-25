@@ -12,7 +12,7 @@ fn main() {
     simple_request.set_method("get_server_info".to_string());
     
     println!("Request:");
-    println!("{}\n", simple_request);
+    println!("{:?}\n", simple_request);
     
     // Create corresponding response
     let mut simple_response = RpcResponse::new(simple_request.id());
@@ -23,7 +23,7 @@ fn main() {
     }));
     
     println!("Response:");
-    println!("{}\n", simple_response);
+    println!("{:?}\n", simple_response);
 
     // Example 2: Request with complex parameters
     println!("Example 2: Request with complex parameters");
@@ -41,7 +41,7 @@ fn main() {
         }));
     
     println!("Request:");
-    println!("{}\n", transfer_request);
+    println!("{:?}\n", transfer_request);
     
     // Create successful response
     let mut transfer_response = RpcResponse::new(transfer_request.id());
@@ -53,7 +53,7 @@ fn main() {
     }));
     
     println!("Response:");
-    println!("{}\n", transfer_response);
+    println!("{:?}\n", transfer_response);
 
     // Example 3: Request that results in an error
     println!("Example 3: Request that results in an error");
@@ -68,7 +68,7 @@ fn main() {
         }));
     
     println!("Request:");
-    println!("{}\n", invalid_request);
+    println!("{:?}\n", invalid_request);
     
     // Create error response
     let mut error_response = RpcResponse::new(invalid_request.id());
@@ -83,7 +83,7 @@ fn main() {
     }));
     
     println!("Error Response:");
-    println!("{}\n", error_response);
+    println!("{:?}\n", error_response);
 
     // Example 4: Batch request simulation
     println!("Example 4: Batch request simulation");
@@ -115,7 +115,7 @@ fn main() {
     
     // Print all requests
     for (i, request) in requests.iter().enumerate() {
-        println!("Batch Request {}:", i + 1);
+        println!("Batch Request {:?}:", i + 1);
         println!("{}", request);
     }
     
@@ -161,7 +161,7 @@ fn main() {
     // Print all responses
     for (i, response) in responses.iter().enumerate() {
         println!("Batch Response {}:", i + 1);
-        println!("{}", response);
+        println!("{:?}", response);
     }
 
     println!("=== Example Complete ===");
